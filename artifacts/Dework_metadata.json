@@ -362,19 +362,19 @@
 	},
 	"sources": {
 		"contracts/Dework.sol": {
-			"keccak256": "0x37d298721db13c58a25dafbdb526959fa06addb9e739d04d3b797f58214c61df",
+			"keccak256": "0xe6b85fb2ac9f5999a30a546db3e432fe037899ac78ae74882d53e7626ea05ff0",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://04e1167fe1008bb9b12ab49c46b0b1c290b07ce63c7907265338698d9d1aa2b1",
-				"dweb:/ipfs/QmcB6osAFrZrHB31zE71ph7TmaHPQ4kFcypDdrNDK19D9U"
+				"bzz-raw://ae7730e4e7c77db091f1d615ca283521546f5ff17571f4f72370afda73340a9e",
+				"dweb:/ipfs/QmdkYgmad1G6MHGwBgCLvqEPpvMRvuqaxWVpvQK9n8BYRe"
 			]
 		},
 		"contracts/types/DeworkTypes.sol": {
-			"keccak256": "0x663b0206906a8ce5a0a14435fbd40194ae5bed3df4f8f331eee1c1d2308a5a20",
+			"keccak256": "0xd97e1c62189f7cd9472ed78e10420f1531eb0adca20c93ffaccb12d227ef9a1a",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://e17c3217fe03aba7e732a4e8561566b4ff5a96fbc2ce5e50a643662c8f4f3718",
-				"dweb:/ipfs/QmaspGJVowbsA87yS2beZMvk8zzpNzD65WR8Ni8LJrF6ip"
+				"bzz-raw://197627dd2e47ed4cf4ca97bdca93d71bdcc09b8276e18a53c323668b2ebfad95",
+				"dweb:/ipfs/QmUxKU5qYHY7b7Y7FjpkWNtVLLQBsG4g2z7xoLzBxW5jFa"
 			]
 		}
 	},

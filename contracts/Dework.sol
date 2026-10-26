@@ -1,9 +1,10 @@
+
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity 0.8.34;
-import {FreelancerProfile, EmployerProfile , CreateJobListingInput} from "./types/DeworkTypes.sol";
+import {FreelancerProfile, EmployerProfile, CreateJobListingInput, JobListing} from "./types/DeworkTypes.sol";
 
 contract Dework {
-   
+
 
     uint256 connectFee;
     address public owner;
@@ -13,18 +14,18 @@ contract Dework {
 
     mapping(uint256 => address) public freelancerIdToAddress;
     mapping(uint256 => address) public employerIdToAddress;
-   
+
 
     event FreelancerProfileRegistered(uint256 freelancerId, address caller);
-
-    error Dework_IncorrectJobCreationFee(uint256 expectedFee , uint256 actualFee);
+    event EmployerProfileRegistered(uint256 employerId, address caller);
     
+    error Dework_IncorrectJobCreationFee(uint256 expectedFee, uint256 actualFee);
+   
 
 
     constructor(address _initialOwner) {
         owner = _initialOwner;
     }
-
 
 
     function getFreelancerProfile(uint256 freelancerId) public view returns (FreelancerProfile memory) {
@@ -56,33 +57,55 @@ contract Dework {
         return employerProfiles.length;
     }
 
-    function registerEmployerProfile(string calldata employerName) public {
+    function registerEmployerProfile(string calldata employerName) external {
         uint256 employerId = getNumberOfRegisteredEmployers();
         EmployerProfile memory employerProfile = EmployerProfile({
-            id: employerId,
-            name: employerName, 
-            isHiring: false, 
-            wallet: msg.sender
+            id: employerId, name: employerName, isHiring: false, wallet: msg.sender, jobListing: new JobListing[](0)
         });
         employerProfiles.push(employerProfile);
         employerIdToAddress[employerId] = msg.sender;
         emit FreelancerProfileRegistered(employerId, msg.sender);
     }
 
-    function createJobListing(
-        uint256 employerId , 
-        CreateJobListingInput calldata jobListingInput
-         ) external payable  {
+    function getNumberOfCreatedJobList(uint256 employerId) public view returns (uint256) {
+        return employerProfiles[employerId].jobListing.length;
+    }
 
-            if(msg.value != jobListingInput.fixedPriceInWei ) {
+    function getCreatedJobList(uint256 employerId) public view returns(uint256) {
+        return employerProfiles[employerId].jobListing.length;
+    }
 
-                revert Dework_IncorrectJobCreationFee(jobListingInput.fixedPriceInWei , msg.value);
-            }
+    function _getEmployerProfile(uint256 employerId) internal view returns (EmployerProfile storage) {
+        return employerProfiles[employerId];
+    }
 
+    function createJobListing(uint256 employerId, CreateJobListingInput calldata jobListingInput)
+        external
+        payable{
+        uint256 fixedPriceForJob = jobListingInput.fixedPriceInWei;
 
-
+        if (msg.value != fixedPriceForJob) {
+            revert Dework_IncorrectJobCreationFee(fixedPriceForJob, msg.value);
         }
 
+        EmployerProfile memory employerProfile = _getEmployerProfile(employerId);
+        uint256 jobId = getCreatedJobList(employerId);
+        JobListing memory newJob = JobListing({
+            id: jobId,
+            title: jobListingInput.title,
+            description: jobListingInput.description,
+            deadlineTimestamp: block.timestamp + jobListingInput.deadlineTimestamp,
+            isOpen: true,
+            fixedPriceInWei: jobListingInput.fixedPriceInWei,
+            hiredFreelancerId: 0,
+            hasHiredFreelancer: false,
+            isPaid: false
+        });
 
-   
+        employerProfile.jobListing.push(newJob);
+
+    }
+ 
+
+    
 }

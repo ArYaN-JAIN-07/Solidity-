@@ -15,6 +15,7 @@ struct EmployerProfile {
     string name;
     address wallet;
     bool isHiring;
+    JobListing[] jobListing;
     
 }
 
