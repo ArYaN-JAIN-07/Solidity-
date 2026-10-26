@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity 0.8.34;
-import {FreelancerProfile, EmployerProfile} from "./types/DeworkTypes.sol";
+import {FreelancerProfile, EmployerProfile , CreateJobListingInput} from "./types/DeworkTypes.sol";
 
 contract Dework {
    
@@ -12,9 +12,12 @@ contract Dework {
     EmployerProfile[] public employerProfiles;
 
     mapping(uint256 => address) public freelancerIdToAddress;
+    mapping(uint256 => address) public employerIdToAddress;
    
 
     event FreelancerProfileRegistered(uint256 freelancerId, address caller);
+
+    error Dework_IncorrectJobCreationFee(uint256 expectedFee , uint256 actualFee);
     
 
 
@@ -53,7 +56,7 @@ contract Dework {
         return employerProfiles.length;
     }
 
-    function registerEmployerProfile(string calldata employerName) external {
+    function registerEmployerProfile(string calldata employerName) public {
         uint256 employerId = getNumberOfRegisteredEmployers();
         EmployerProfile memory employerProfile = EmployerProfile({
             id: employerId,
@@ -62,6 +65,24 @@ contract Dework {
             wallet: msg.sender
         });
         employerProfiles.push(employerProfile);
+        employerIdToAddress[employerId] = msg.sender;
+        emit FreelancerProfileRegistered(employerId, msg.sender);
     }
+
+    function createJobListing(
+        uint256 employerId , 
+        CreateJobListingInput calldata jobListingInput
+         ) external payable  {
+
+            if(msg.value != jobListingInput.fixedPriceInWei ) {
+
+                revert Dework_IncorrectJobCreationFee(jobListingInput.fixedPriceInWei , msg.value);
+            }
+
+
+
+        }
+
+
    
 }
