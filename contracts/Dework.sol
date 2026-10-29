@@ -18,10 +18,14 @@ contract Dework {
     mapping(uint256 => address) public employerIdToAddress;
     mapping(uint256 => uint256) public employerBalance;
 
-    event FreelancerProfileRegistered(uint256 freelancerId, address caller);
+    event FreelancerProfileRegistered(uint256 freelancerId, address caller);    
     event EmployerProfileRegistered(uint256 employerId, address caller);
     
     error Dework_IncorrectJobCreationFee(uint256 expectedFee, uint256 actualFee);
+    error Dework_JobClosed(uint256 jobId);
+    error Dework_UnauthourizedEmployer(uint256 employerId , address caller);
+    error Dework_UnauthourizedFreelancer(uint256 FreelancerId , address caller);
+    error Dework_UnauthourizedJobId(uint256 employerId , uint256 jobId );
    
 
     constructor(address _initialOwner) {
@@ -114,7 +118,64 @@ contract Dework {
         
         employerProfile.jobListing.push(newJob);
         //    employerProfiles[employerId].jobListing.push(newJob);
+
+        
     }
+
+    function _requireJobIsOpen(JobListing memory job) internal pure {
+
+        if (job.isOpen != true) {
+            revert Dework_JobClosed(job.id);
+        }
+
+
+    }
+
+    function _getJob(uint256 employerId , uint256 jobId) internal view returns(JobListing storage) {
+
+        return employerProfiles[employerId].jobListing[jobId];
+
+
+
+    }
+
+    function getJobList(uint256 employerId) external view returns(JobListing[] memory) {
+        return employerProfiles[employerId].jobListing;
+    }
+
+
+    function hireFreelancer(uint256 employerId , uint256 freelancerId , uint256 jobId) public {
+
+        address employer = employerIdToAddress[employerId];
+
+        if(employer != msg.sender || employer == address(0)) {
+            revert Dework_UnauthourizedEmployer(employerId , msg.sender);
+        }
+
+        if(freelancerId >= getNumberOfRegisteredFreelancers() || freelancerIdToAddress[freelancerId] == address(0)) 
+        {
+
+            revert Dework_UnauthourizedFreelancer(freelancerId , msg.sender);
+
+        }
+
+        if(jobId >= getNumberOfCreatedJobList(employerId)) {
+            revert Dework_UnauthourizedJobId(employerId , jobId);
+        }
+
+        JobListing storage job = _getJob(employerId, jobId);
+        _requireJobIsOpen(job);
+        job.hiredFreelancerId = freelancerId;
+        job.hasHiredFreelancer = true;
+        job.isOpen = false;
+
+
+
+
+
+            
+        }
+    
 
 
     

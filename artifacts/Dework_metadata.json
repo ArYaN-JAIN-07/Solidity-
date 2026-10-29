@@ -33,6 +33,65 @@
 				"type": "error"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "jobId",
+						"type": "uint256"
+					}
+				],
+				"name": "Dework_JobClosed",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "employerId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "caller",
+						"type": "address"
+					}
+				],
+				"name": "Dework_UnauthourizedEmployer",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "FreelancerId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "caller",
+						"type": "address"
+					}
+				],
+				"name": "Dework_UnauthourizedFreelancer",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "employerId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "jobId",
+						"type": "uint256"
+					}
+				],
+				"name": "Dework_UnauthourizedJobId",
+				"type": "error"
+			},
+			{
 				"anonymous": false,
 				"inputs": [
 					{
@@ -330,6 +389,72 @@
 						"type": "uint256"
 					}
 				],
+				"name": "getJobList",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "id",
+								"type": "uint256"
+							},
+							{
+								"internalType": "string",
+								"name": "title",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "description",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "deadlineTimestamp",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bool",
+								"name": "isOpen",
+								"type": "bool"
+							},
+							{
+								"internalType": "uint256",
+								"name": "fixedPriceInWei",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "hiredFreelancerId",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bool",
+								"name": "hasHiredFreelancer",
+								"type": "bool"
+							},
+							{
+								"internalType": "bool",
+								"name": "isPaid",
+								"type": "bool"
+							}
+						],
+						"internalType": "struct JobListing[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "employerId",
+						"type": "uint256"
+					}
+				],
 				"name": "getNumberOfCreatedJobList",
 				"outputs": [
 					{
@@ -365,6 +490,29 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "employerId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "freelancerId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "jobId",
+						"type": "uint256"
+					}
+				],
+				"name": "hireFreelancer",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -445,11 +593,11 @@
 	},
 	"sources": {
 		"contracts/Dework.sol": {
-			"keccak256": "0x9bb910dbd25a14eb073aea6ef5a966f2b7b9630c7bd293fdc95b67041a62066f",
+			"keccak256": "0x39531f488e870e42b03d2d3d3635c505e8ae45b25c49a863f47324ba2bf6cc57",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://34927c4da0d4181ad828fd08d93e005109bb04517107e3152af7da883b227bb3",
-				"dweb:/ipfs/QmPse8T56Tg62dJWKMRTihhcrG1cbNmr4mb3bpVdVUq6XD"
+				"bzz-raw://7f8993404c682111a9d76fb029e532bedff16c7091c60b4a52d4079070253bff",
+				"dweb:/ipfs/QmXWFvMX6KNjn8TmD4UrDrJDQyjKxtpjN5cDYshMtykMSG"
 			]
 		},
 		"contracts/types/DeworkTypes.sol": {
