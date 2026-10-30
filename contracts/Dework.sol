@@ -25,8 +25,10 @@ contract Dework {
     error Dework_JobClosed(uint256 jobId);
     error Dework_UnauthourizedEmployer(uint256 employerId , address caller);
     error Dework_UnauthourizedFreelancer(uint256 FreelancerId , address caller);
-    error Dework_UnauthourizedJobId(uint256 employerId , uint256 jobId );
-   
+    error Dework_InvalidJobId(uint256 employerId , uint256 jobId );
+    error Dework_NotEnoughBalance(uint256 employerId , uint256 employerBalance);
+    error Dework_FreelancerIdMismatch(uint256 expectedFreelancerId , uint256 actualFreelancerId );
+    error JobIsAlreadyPaid(uint256 jobId);
 
     constructor(address _initialOwner) {
         owner = _initialOwner;
@@ -40,6 +42,23 @@ contract Dework {
         }
         _;
     } 
+
+    modifier validateFreelancer(uint256 freelancerId) {
+         if(freelancerId >= getNumberOfRegisteredFreelancers() || freelancerIdToAddress[freelancerId] == address(0)) 
+        {
+
+            revert Dework_UnauthourizedFreelancer(freelancerId , msg.sender);
+
+        }
+        _;
+    }
+
+    modifier validateJobId(uint256 jobId , uint256 employerId) {
+        if(jobId >= getNumberOfCreatedJobList(employerId)) {
+            revert Dework_InvalidJobId(employerId , jobId);
+        }
+        _;
+    }
 
  
 
@@ -122,6 +141,8 @@ contract Dework {
             hasHiredFreelancer: false,
             isPaid: false
         });
+
+        employerBalance[employerId] = jobListingInput.fixedPriceInWei;
         
         employerProfile.jobListing.push(newJob);
         //    employerProfiles[employerId].jobListing.push(newJob);
@@ -151,18 +172,8 @@ contract Dework {
     }
 
 
-    function hireFreelancer(uint256 employerId , uint256 freelancerId , uint256 jobId) public onlyAuthourizedEmployer(employerId) {
+    function hireFreelancer(uint256 employerId , uint256 freelancerId , uint256 jobId) public onlyAuthourizedEmployer(employerId) validateFreelancer(freelancerId) validateJobId(jobId , employerId) {
 
-      if(freelancerId >= getNumberOfRegisteredFreelancers() || freelancerIdToAddress[freelancerId] == address(0)) 
-        {
-
-            revert Dework_UnauthourizedFreelancer(freelancerId , msg.sender);
-
-        }
-
-        if(jobId >= getNumberOfCreatedJobList(employerId)) {
-            revert Dework_UnauthourizedJobId(employerId , jobId);
-        }
 
         JobListing storage job = _getJob(employerId, jobId);
         _requireJobIsOpen(job);
@@ -175,6 +186,27 @@ contract Dework {
 
 
             
+        } 
+
+        function relaseEscrowPayment(uint256 employerId , uint256 jobId , uint256 freelancerId)  public onlyAuthourizedEmployer(employerId)  {
+            JobListing storage job = _getJob(employerId, jobId);
+            uint256 amountToSend = job.fixedPriceInWei;
+
+            if(employerBalance[employerId]<amountToSend) {
+                revert Dework_NotEnoughBalance(employerId,employerBalance[employerId]);
+            }
+
+            if(freelancerId != job.hiredFreelancerId ) {
+                revert Dework_FreelancerIdMismatch(job.hiredFreelancerId , freelancerId);
+            }
+
+            if(job.isPaid == true) {
+                revert JobIsAlreadyPaid(job.id);
+
+            }
+
+            job.isPaid = true;
+            employerBalance[employerId]  = employerBalance[employerId] - amountToSend;
         }
     
 

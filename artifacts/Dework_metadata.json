@@ -20,6 +20,22 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
+						"name": "expectedFreelancerId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "actualFreelancerId",
+						"type": "uint256"
+					}
+				],
+				"name": "Dework_FreelancerIdMismatch",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
 						"name": "expectedFee",
 						"type": "uint256"
 					},
@@ -36,11 +52,43 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
+						"name": "employerId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "jobId",
+						"type": "uint256"
+					}
+				],
+				"name": "Dework_InvalidJobId",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
 						"name": "jobId",
 						"type": "uint256"
 					}
 				],
 				"name": "Dework_JobClosed",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "employerId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "employerBalance",
+						"type": "uint256"
+					}
+				],
+				"name": "Dework_NotEnoughBalance",
 				"type": "error"
 			},
 			{
@@ -79,16 +127,11 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "employerId",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
 						"name": "jobId",
 						"type": "uint256"
 					}
 				],
-				"name": "Dework_UnauthourizedJobId",
+				"name": "JobIsAlreadyPaid",
 				"type": "error"
 			},
 			{
@@ -563,6 +606,29 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "employerId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "jobId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "freelancerId",
+						"type": "uint256"
+					}
+				],
+				"name": "relaseEscrowPayment",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -593,11 +659,11 @@
 	},
 	"sources": {
 		"contracts/Dework.sol": {
-			"keccak256": "0x27360f801291f288eeefe84f77b6981c61ea367577a898db52bc68aa5d635a50",
+			"keccak256": "0x9de6345d679073837ef71d907c3a3c3cb4524c649720cb0009073eac1d1c22d5",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://18b787351fe7bcca5a25ab8cebfae2e1e69a4afc198b29f1bdf80ddcb2e10084",
-				"dweb:/ipfs/QmRT3cnGsYPXt6U8bVaxruMabYJ2n6otpazxZEUXG6NqE5"
+				"bzz-raw://e5e62b1dab98edb2264853d00cf6ab3b136fb0d3e3ce6c092e315127d19e3315",
+				"dweb:/ipfs/QmRAVaNgE5FR7M8USHsuEex1o1aDDss47j4t6iX5n1EatE"
 			]
 		},
 		"contracts/types/DeworkTypes.sol": {
