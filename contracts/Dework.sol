@@ -32,7 +32,14 @@ contract Dework {
         owner = _initialOwner;
     }
 
+    modifier onlyAuthourizedEmployer(uint256 employerId) {
+        address employer = employerIdToAddress[employerId];
 
+        if(employer != msg.sender || employer == address(0)) {
+            revert Dework_UnauthourizedEmployer(employerId , msg.sender);
+        }
+        _;
+    } 
 
  
 
@@ -92,8 +99,8 @@ contract Dework {
     }
 
     function createJobListing(uint256 employerId, CreateJobListingInput calldata jobListingInput)
-        external
-        payable
+        external onlyAuthourizedEmployer(employerId)
+        payable 
     {
         uint256 fixedPriceForJob = jobListingInput.fixedPriceInWei;
 
@@ -144,15 +151,9 @@ contract Dework {
     }
 
 
-    function hireFreelancer(uint256 employerId , uint256 freelancerId , uint256 jobId) public {
+    function hireFreelancer(uint256 employerId , uint256 freelancerId , uint256 jobId) public onlyAuthourizedEmployer(employerId) {
 
-        address employer = employerIdToAddress[employerId];
-
-        if(employer != msg.sender || employer == address(0)) {
-            revert Dework_UnauthourizedEmployer(employerId , msg.sender);
-        }
-
-        if(freelancerId >= getNumberOfRegisteredFreelancers() || freelancerIdToAddress[freelancerId] == address(0)) 
+      if(freelancerId >= getNumberOfRegisteredFreelancers() || freelancerIdToAddress[freelancerId] == address(0)) 
         {
 
             revert Dework_UnauthourizedFreelancer(freelancerId , msg.sender);

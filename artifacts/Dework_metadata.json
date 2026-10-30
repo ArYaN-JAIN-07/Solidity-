@@ -593,11 +593,11 @@
 	},
 	"sources": {
 		"contracts/Dework.sol": {
-			"keccak256": "0x39531f488e870e42b03d2d3d3635c505e8ae45b25c49a863f47324ba2bf6cc57",
+			"keccak256": "0x27360f801291f288eeefe84f77b6981c61ea367577a898db52bc68aa5d635a50",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://7f8993404c682111a9d76fb029e532bedff16c7091c60b4a52d4079070253bff",
-				"dweb:/ipfs/QmXWFvMX6KNjn8TmD4UrDrJDQyjKxtpjN5cDYshMtykMSG"
+				"bzz-raw://18b787351fe7bcca5a25ab8cebfae2e1e69a4afc198b29f1bdf80ddcb2e10084",
+				"dweb:/ipfs/QmRT3cnGsYPXt6U8bVaxruMabYJ2n6otpazxZEUXG6NqE5"
 			]
 		},
 		"contracts/types/DeworkTypes.sol": {
