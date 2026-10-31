@@ -29,10 +29,21 @@ contract Dework {
     error Dework_NotEnoughBalance(uint256 employerId , uint256 employerBalance);
     error Dework_FreelancerIdMismatch(uint256 expectedFreelancerId , uint256 actualFreelancerId );
     error JobIsAlreadyPaid(uint256 jobId);
+    error Dework_PaymentToFreelancer(address freelancer ,  uint256 amountSent);
+    error Dework_NotAuthourizedOwner();
 
     constructor(address _initialOwner) {
         owner = _initialOwner;
     }
+
+    modifier onlyAuthourizedOwner(address newOwner) {
+        if(owner != msg.sender) {
+
+            revert Dework_NotAuthourizedOwner();
+
+        }
+        _;
+    } 
 
     modifier onlyAuthourizedEmployer(uint256 employerId) {
         address employer = employerIdToAddress[employerId];
@@ -180,13 +191,35 @@ contract Dework {
         job.hiredFreelancerId = freelancerId;
         job.hasHiredFreelancer = true;
         job.isOpen = false;
-
-
-
-
-
-            
+ 
         } 
+    
+    function _sendPaymentToFreelancer(address freelancer , uint256 amountToSend) internal returns(bool) {
+        (bool success,) = freelancer.call{value:amountToSend}(""); 
+        if(success==false){
+            revert Dework_PaymentToFreelancer(freelancer , amountToSend);
+        }
+    }
+
+        function _calculatedPayment(uint256 amountToSend , uint256 jobDeadlineTimestamp) internal view returns(uint256) {
+            if(block.timestamp <= jobDeadlineTimestamp ) {
+                return amountToSend;
+            }
+            uint256 delayInCompletion = block.timestamp - jobDeadlineTimestamp;
+            uint256 delayInDays = (delayInCompletion + 1 days -1)/1 days;
+
+            uint256 deductionBPS = delayInDays*LATE_PENALITY_BPS_PER_DAY;
+
+            if(deductionBPS > BPS_DENOMINATOR) {
+                deductionBPS = BPS_DENOMINATOR;
+            } 
+
+            uint256 deductionAmount = amountToSend*deductionBPS/BPS_DENOMINATOR;
+
+            return amountToSend - deductionAmount;
+
+
+        }
 
         function relaseEscrowPayment(uint256 employerId , uint256 jobId , uint256 freelancerId)  public onlyAuthourizedEmployer(employerId)  {
             JobListing storage job = _getJob(employerId, jobId);
@@ -207,18 +240,25 @@ contract Dework {
 
             job.isPaid = true;
             employerBalance[employerId]  = employerBalance[employerId] - amountToSend;
+
+            uint256 paymentAmount = _calculatedPayment(amountToSend , job.deadlineTimestamp);
+            _sendPaymentToFreelancer(freelancerIdToAddress[freelancerId], paymentAmount);
         }
     
+        function modifyOwner(address newOwner) external onlyAuthourizedOwner(newOwner) {
+            owner = newOwner;
+        }
 
 
-    
+        function withdrawAmount(uint256 employerId, uint256 withdrawalAmount) external onlyAuthourizedEmployer(employerId) {
+        if (employerBalance[employerId] < withdrawalAmount) {
+            revert Dework_NotEnoughBalance(employerId, employerBalance[employerId]);
+        }
 
+        employerBalance[employerId] -= withdrawalAmount;
+        (bool success,)= employerIdToAddress[employerId].call{value:withdrawalAmount}("");
+        require(success == false , "Transfer failed to employer"); 
   
-
-   
-
-
-   
-
     
+}
 }
