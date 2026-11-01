@@ -153,7 +153,7 @@ contract Dework {
             isPaid: false
         });
 
-        employerBalance[employerId] = jobListingInput.fixedPriceInWei;
+        employerBalance[employerId] += jobListingInput.fixedPriceInWei;
         
         employerProfile.jobListing.push(newJob);
         //    employerProfiles[employerId].jobListing.push(newJob);
@@ -173,7 +173,7 @@ contract Dework {
     function _getJob(uint256 employerId , uint256 jobId) internal view returns(JobListing storage) {
 
         return employerProfiles[employerId].jobListing[jobId];
-
+    
 
 
     }

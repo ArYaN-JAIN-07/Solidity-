@@ -711,11 +711,11 @@
 	},
 	"sources": {
 		"contracts/Dework.sol": {
-			"keccak256": "0xb7967d09a3760be4b3d24cef081e306405ff719b0310337c44edb62a9f6fd62b",
+			"keccak256": "0xff93dde7711bd0679fe20beab9a202189ab21548d5bf12f09560b739be4aca5a",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://d5686cf6ef16d99c5186b7db7f648aa1fab4cd818b5d09602797a0fb0d779078",
-				"dweb:/ipfs/QmXkAfUz1F8d2n1sZeeYb4uMuqRHbU9T7U5An88q1j1sgf"
+				"bzz-raw://6be7785438fe5ba585cbd5efb79c9d6710d828a0747985304c3fa9335ccc1e7a",
+				"dweb:/ipfs/QmTjb512qt3fCXiRXnrk1fTtaYzm7NWdRdjSsrN2XigsXa"
 			]
 		},
 		"contracts/types/DeworkTypes.sol": {
